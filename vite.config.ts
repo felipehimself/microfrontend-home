@@ -1,34 +1,89 @@
 /// <reference types='vitest' />
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+import viteTsConfigPaths from 'vite-tsconfig-paths';
 
-export default defineConfig({
-  cacheDir: './node_modules/.vite/microfrontend-home',
+export default defineConfig(({ mode }) => {
+  console.log('running vite in mode: ', mode);
 
-  server: {
-    port: 4200,
-    host: 'localhost',
-  },
+  const isDev = mode === 'development';
 
-  preview: {
-    port: 4300,
-    host: 'localhost',
-  },
-
-  plugins: [react(), nxViteTsPaths()],
-
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [ nxViteTsPaths() ],
-  // },
-
-  test: {
-    globals: true,
-    cache: {
-      dir: './node_modules/.vitest',
+  const hotModuleReplacementConfig = {
+    watch: {
+      chokidar: {
+        usePolling: mode === 'development',
+      },
     },
-    environment: 'jsdom',
-    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-  },
+  };
+
+  return {
+    cacheDir: './node_modules/.vite/microfrontend-home',
+
+    server: {
+      port: 4200,
+      host: 'localhost',
+    },
+
+    preview: {
+      port: 4305,
+      host: 'localhost',
+    },
+
+    plugins: [
+      react(),
+      nxViteTsPaths(),
+      viteTsConfigPaths({
+        root: './',
+      }),
+    ],
+
+    build: {
+      outDir: './dist',
+      emptyOutDir: true,
+      ...(isDev && hotModuleReplacementConfig),
+      reportCompressedSize: true,
+      commonjsOptions: {
+        transformMixedEsModules: true,
+      },
+      sourcemap: true,
+      rollupOptions: {
+        input: 'src/microfrontend-home.tsx',
+        preserveEntrySignatures: 'strict',
+        output: [
+          {
+            format: 'system',
+            entryFileNames: 'system/microfrontend-home.js',
+            inlineDynamicImports: false,
+          },
+          {
+            format: 'cjs',
+            entryFileNames: 'commonjs/microfrontend-home.cjs',
+            inlineDynamicImports: false,
+          },
+          {
+            format: 'es',
+            entryFileNames: 'modules/microfrontend-home.mjs',
+            inlineDynamicImports: false,
+          },
+        ],
+        external: [
+          'react',
+          'react-dom',
+          '@emotion/react',
+          '@emotion/styled',
+          // '@mfe-lib/styleguide',
+        ],
+      },
+    },
+
+    test: {
+      globals: true,
+      cache: {
+        dir: './node_modules/.vitest',
+      },
+      environment: 'jsdom',
+      include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    },
+  };
 });
