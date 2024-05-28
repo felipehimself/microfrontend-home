@@ -1,18 +1,18 @@
-// export type TRoutes = {
-//   submenuName: string;
-//   path: string;
-// };
+export type TRoutes = {
+  submenuName: string;
+  path: string;
+};
 
-// export type TAppRoutes = {
-//   appName: string;
-//   path: string;
-//   appIcon: string;
-//   routes: TRoutes[];
-// };
+export type TAppRoutes = {
+  appName: string;
+  path: string;
+  appIcon: string;
+  routes: TRoutes[];
+};
 
-// export const MfeNavRoutes: TAppRoutes = {
-//   appName: 'Announcements',
-//   path: 'announcements',
-//   appIcon: 'Announcements',
-//   routes: [],
-// };
+export const MfeNavRoutes: TAppRoutes = {
+  appName: 'Home',
+  path: '/',
+  appIcon: 'Home',
+  routes: [],
+};

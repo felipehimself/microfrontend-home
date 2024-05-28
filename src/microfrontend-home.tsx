@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOMClient from 'react-dom/client';
 import singleSpaReact from 'single-spa-react';
 import rootComponent from './app';
+import { MfeNavRoutes } from './routes/navbar-routes';
 
 export const { bootstrap, mount, unmount } = singleSpaReact({
   React,
@@ -13,3 +14,4 @@ export const { bootstrap, mount, unmount } = singleSpaReact({
   },
 });
 
+export const routes = MfeNavRoutes;
