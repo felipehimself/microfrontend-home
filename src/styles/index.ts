@@ -8,5 +8,21 @@ export const usePageStyles = makeStyles({
     justifyContent: 'center',
   },
 
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1rem',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    height: '100vh',
+    padding: '2rem',
+
+    '& ul': {
+      marginLeft: '1rem',
+    },
+  },
+
+  href: {},
+
   text: typographyStyles.body2,
 });
